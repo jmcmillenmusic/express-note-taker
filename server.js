@@ -1,6 +1,6 @@
 // Import Express.js
 const express = require('express');
-const database = require('./Develop/db/db.json');
+const database = require('./db/db.json');
 
 // Import built-in Node.js package 'path' to resolve path of files that are located on the server
 const path = require('path');
@@ -16,11 +16,11 @@ app.use(express.static('public'));
 
 // Create Express.js routes for default '/', '/send' and '/routes' endpoints
 app.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, 'Develop/public/index.html'))
+  res.sendFile(path.join(__dirname, 'public/index.html'))
 );
 
 app.get('/notes', (req, res) =>
-  res.sendFile(path.join(__dirname, 'Develop/public/notes.html'))
+  res.sendFile(path.join(__dirname, 'public/notes.html'))
 );
 
 app.get('/api/db', (req, res) => res.json(database));
