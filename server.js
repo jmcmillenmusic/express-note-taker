@@ -1,6 +1,6 @@
 // Import Express.js
 const express = require('express');
-const database = require('./db/db.json');
+const database = require('./Develop/db/db.json');
 
 // Import built-in Node.js package 'path' to resolve path of files that are located on the server
 const path = require('path');
