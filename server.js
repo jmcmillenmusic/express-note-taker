@@ -14,13 +14,13 @@ const PORT = 3001;
 // Static middleware pointing to the public folder
 app.use(express.static('public'));
 
-// Create Express.js routes for default '/', '/send' and '/routes' endpoints
+// Create Express.js routes for default '/' and '/notes' endpoints
 app.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, 'public/index.html'))
+  res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
 app.get('/notes', (req, res) =>
-  res.sendFile(path.join(__dirname, 'public/notes.html'))
+  res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
 app.get('/api/db', (req, res) => res.json(database));
