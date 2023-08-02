@@ -1,6 +1,6 @@
 // Import Express.js
 const express = require('express');
-// const database = require('./db/db.json');
+const database = require('./db/db.json');
 const fs = require('fs');
 // Helper method for generating unique ids
 const uuid = require('./helpers/uuid');
@@ -32,20 +32,7 @@ app.get('/notes', (req, res) =>
 );
 
 // GET all notes from db.json
-// app.get('/api/notes', (req, res) => res.json(database));
-app.get("/api/notes", (req, res) => {
-  const readFileAsync = util.promisify(fs.readFile);
-  const promise = readFileAsync("db/db.json", "utf-8");
-  promise.then((notes) => {
-    let parsedNotes;
-    try {
-      parsedNotes = [].concat(JSON.parse(notes));
-      res.json(parsedNotes);
-    } catch (err) {
-      parsedNotes = [];
-    }
-  });
-});
+app.get('/api/notes', (req, res) => res.json(database));
 
 // POST Route to post a new note to db.json
 app.post('/api/notes', (req, res) => {
@@ -60,20 +47,18 @@ app.post('/api/notes', (req, res) => {
     };
 
     // Obtain existing notes
-    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+    fs.readFile('./db/db.json', 'utf8', (err) => {
       if (err) {
         console.error(err);
       } else {
-        // Convert string into JSON object
-        const parsedNotes = JSON.parse(data);
 
         // Add a new note
-        parsedNotes.push(newNote);
+        database.push(newNote);
 
         // Write updated notes back to the file
         fs.writeFile(
           './db/db.json',
-          JSON.stringify(parsedNotes, null, 4),
+          JSON.stringify(database),
           (writeErr) =>
             writeErr
               ? console.error(writeErr)
@@ -93,7 +78,37 @@ app.post('/api/notes', (req, res) => {
   };
 });
 
+// Delete function for deleting notes
+app.delete('/api/notes/:id', (req, res) => {
+  
+  const { title, text, id } = req.body;
+  
+  if (title && text && id) {
+    const thisNote = {
+      title,
+      text,
+      id: uuid()
+    };
 
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+      } else {
+        fs.writeFile(
+            './db/db.json',
+            JSON.stringify(database),
+            (writeErr) =>
+              writeErr
+                ? console.error(writeErr)
+                : console.info('Successfully updated notes!')
+          );
+        let database = JSON.parse(data);
+        database = database.filter(entry => entry.id !== this.id);
+        res.json(database);
+      }
+    });
+  }
+});
 
 // listen() method is responsible for listening for incoming connections on the specified port 
 app.listen(PORT, () =>
