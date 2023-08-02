@@ -1,4 +1,6 @@
 const notes = require('express').Router();
+const fs = require('fs');
+const { readFromFile, readAndAppend } = require('../helpers/fsUtils');
 
 // GET Route for retrieving all the feedback
 notes.get('/', (req, res) =>
