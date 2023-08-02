@@ -23,7 +23,8 @@ app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
-app.get('/api/db', (req, res) => res.json(database));
+// GET all notes from db.json
+app.get('/api/notes', (req, res) => res.json(database));
 
 // listen() method is responsible for listening for incoming connections on the specified port 
 app.listen(PORT, () =>
