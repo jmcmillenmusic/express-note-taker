@@ -1,6 +1,6 @@
 // Import Express.js
 const express = require('express');
-const database = require('./db/db.json');
+// const database = require('./db/db.json');
 const fs = require('fs');
 // Helper method for generating unique ids
 const uuid = require('./helpers/uuid');
@@ -32,7 +32,20 @@ app.get('/notes', (req, res) =>
 );
 
 // GET all notes from db.json
-app.get('/api/notes', (req, res) => res.json(database));
+// app.get('/api/notes', (req, res) => res.json(database));
+app.get("/api/notes", (req, res) => {
+  const readFileAsync = util.promisify(fs.readFile);
+  const promise = readFileAsync("db/db.json", "utf-8");
+  promise.then((notes) => {
+    let parsedNotes;
+    try {
+      parsedNotes = [].concat(JSON.parse(notes));
+      res.json(parsedNotes);
+    } catch (err) {
+      parsedNotes = [];
+    }
+  });
+});
 
 // POST Route to post a new note to db.json
 app.post('/api/notes', (req, res) => {
@@ -80,19 +93,7 @@ app.post('/api/notes', (req, res) => {
   };
 });
 
-app.get("/api/notes", (req, res) => {
-  const readFileAsync = util.promisify(fs.readFile);
-  const promise = readFileAsync("db/db.json", "utf-8");
-  promise.then((notes) => {
-    let parsedNotes;
-    try {
-      parsedNotes = [].concat(JSON.parse(notes));
-      res.json(parsedNotes);
-    } catch (err) {
-      parsedNotes = [];
-    }
-  });
-});
+
 
 // listen() method is responsible for listening for incoming connections on the specified port 
 app.listen(PORT, () =>
