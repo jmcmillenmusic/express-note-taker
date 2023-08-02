@@ -2,6 +2,8 @@
 const express = require('express');
 const database = require('./db/db.json');
 const fs = require('fs');
+// Helper method for generating unique ids
+const uuid = require('./helpers/uuid');
 
 // Import built-in Node.js package 'path' to resolve path of files that are located on the server
 const path = require('path');
@@ -39,7 +41,8 @@ app.post('/api/notes', (req, res) => {
   if (title && text) {
     const newNote = {
       title,
-      text
+      text,
+      note_id: uuid()
     };
 
     // Obtain existing notes
@@ -73,7 +76,7 @@ app.post('/api/notes', (req, res) => {
     res.status(201).json(response);
   } else {
     res.status(500).json('Error in adding new note!');
-  }
+  };
 });
 
 // listen() method is responsible for listening for incoming connections on the specified port 
