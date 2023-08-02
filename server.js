@@ -78,38 +78,6 @@ app.post('/api/notes', (req, res) => {
   };
 });
 
-// Delete function for deleting notes
-app.delete('/api/notes/:id', (req, res) => {
-  
-  const { title, text, id } = req.body;
-  
-  if (title && text && id) {
-    const thisNote = {
-      title,
-      text,
-      id: uuid()
-    };
-
-    fs.readFile('./db/db.json', 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-      } else {
-        fs.writeFile(
-            './db/db.json',
-            JSON.stringify(database),
-            (writeErr) =>
-              writeErr
-                ? console.error(writeErr)
-                : console.info('Successfully updated notes!')
-          );
-        let database = JSON.parse(data);
-        database = database.filter(entry => entry.id !== this.id);
-        res.json(database);
-      }
-    });
-  }
-});
-
 // listen() method is responsible for listening for incoming connections on the specified port 
 app.listen(PORT, () =>
   console.log(`Example app listening at http://localhost:${PORT}`)
