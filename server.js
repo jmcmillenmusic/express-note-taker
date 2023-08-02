@@ -4,6 +4,7 @@ const database = require('./db/db.json');
 const fs = require('fs');
 // Helper method for generating unique ids
 const uuid = require('./helpers/uuid');
+const util = require("util");
 
 // Import built-in Node.js package 'path' to resolve path of files that are located on the server
 const path = require('path');
@@ -77,6 +78,20 @@ app.post('/api/notes', (req, res) => {
   } else {
     res.status(500).json('Error in adding new note!');
   };
+});
+
+app.get("/api/notes", (req, res) => {
+  const readFileAsync = util.promisify(fs.readFile);
+  const promise = readFileAsync("db/db.json", "utf-8");
+  promise.then((notes) => {
+    let parsedNotes;
+    try {
+      parsedNotes = [].concat(JSON.parse(notes));
+      res.json(parsedNotes);
+    } catch (err) {
+      parsedNotes = [];
+    }
+  });
 });
 
 // listen() method is responsible for listening for incoming connections on the specified port 
